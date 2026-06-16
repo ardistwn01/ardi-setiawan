@@ -42,7 +42,17 @@ window.addEventListener('scroll', () => {
     if (link) link.classList.toggle('active', scrollY >= top && scrollY < bottom);
   });
 });
-navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+navToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+  navToggle.classList.toggle('active');
+});
+// Close mobile menu when a link is clicked
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.classList.remove('active');
+  });
+});
 
 // ============================================================
 // SCROLL REVEAL

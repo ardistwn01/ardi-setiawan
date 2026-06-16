@@ -34,6 +34,32 @@ function showDashboard() {
 }
 
 // ============================================================
+// MOBILE SIDEBAR TOGGLE
+// ============================================================
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+if (mobileMenuBtn && sidebar && sidebarOverlay) {
+  mobileMenuBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    sidebarOverlay.classList.toggle('active');
+  });
+  sidebarOverlay.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('active');
+  });
+  // Close sidebar when a nav item is clicked on mobile
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+      }
+    });
+  });
+}
+
+// ============================================================
 // TABS
 // ============================================================
 const tabTitles = { overview:'Overview', profile:'Profile', projects:'Projects', experience:'Experience', skills:'Skills', certificates:'Certificates', messages:'Messages' };
