@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Portfolio Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">ardi.<span>dev</span></div>
+    <h1 class="login-title">Admin Dashboard</h1>
+    <p class="login-sub">Masuk untuk mengelola konten portofolio</p>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="admin@email.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••">
+    </div>
+    <button class="btn btn-primary btn-full" id="loginBtn">Masuk</button>
+    <p id="loginErr" class="login-err"></p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">ardi.<span>dev</span></div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="overview">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overview
+      </button>
+      <button class="nav-item" data-tab="profile">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </button>
+      <button class="nav-item" data-tab="projects">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        Projects
+      </button>
+      <button class="nav-item" data-tab="experience">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        Experience
+      </button>
+      <button class="nav-item" data-tab="skills">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Skills
+      </button>
+      <button class="nav-item" data-tab="certificates">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+        Certificates
+      </button>
+      <button class="nav-item" data-tab="messages">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+        <span class="badge-unread" id="unreadBadge" style="display:none">0</span>
+      </button>
+    </nav>
+    <button class="logout-btn" id="logoutBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      Logout
+    </button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <header class="dash-header">
+      <div>
+        <h1 class="dash-title" id="dashTitle">Overview</h1>
+        <p class="dash-sub">Kelola konten portofolio kamu</p>
+      </div>
+      <a href="../index.html" target="_blank" class="btn btn-outline btn-sm">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        Lihat Portofolio
+      </a>
+    </header>
+
+    <!-- OVERVIEW -->
+    <div id="tab-overview" class="tab-content active">
+      <div class="stats-grid" id="overviewStats"></div>
+      <div class="section-card">
+        <h3 class="card-title">Pesan Terbaru</h3>
+        <div id="recentMessages"></div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="tab-profile" class="tab-content">
+      <div class="section-card">
+        <h3 class="card-title">Informasi Profil</h3>
+        <div class="form-grid">
+          <div class="form-group"><label>Nama</label><input id="pName" type="text"></div>
+          <div class="form-group"><label>Title / Tagline</label><input id="pTitle" type="text"></div>
+          <div class="form-group full"><label>Bio</label><textarea id="pBio" rows="4"></textarea></div>
+          <div class="form-group"><label>Email</label><input id="pEmail" type="email"></div>
+          <div class="form-group"><label>Location</label><input id="pLocation" type="text"></div>
+          <div class="form-group"><label>GitHub URL</label><input id="pGithub" type="url"></div>
+          <div class="form-group"><label>LinkedIn URL</label><input id="pLinkedin" type="url"></div>
+          <div class="form-group"><label>Instagram URL</label><input id="pInstagram" type="url"></div>
+          <div class="form-group"><label>Avatar URL</label><input id="pAvatar" type="url" placeholder="https://..."></div>
+          <div class="form-group"><label>CV URL</label><input id="pCv" type="url" placeholder="Link Google Drive / file CV"></div>
+        </div>
+        <button class="btn btn-primary" id="saveProfile">Simpan Profile</button>
+        <span class="save-msg" id="profileMsg"></span>
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div id="tab-projects" class="tab-content">
+      <div class="tab-toolbar">
+        <button class="btn btn-primary btn-sm" id="addProject">+ Tambah Project</button>
+      </div>
+      <div id="projectsList"></div>
+      <div id="projectForm" class="section-card" style="display:none">
+        <h3 class="card-title" id="projectFormTitle">Tambah Project</h3>
+        <input type="hidden" id="projectId">
+        <div class="form-grid">
+          <div class="form-group"><label>Judul</label><input id="projTitle" type="text"></div>
+          <div class="form-group"><label>Live URL</label><input id="projLive" type="url"></div>
+          <div class="form-group full"><label>Deskripsi</label><textarea id="projDesc" rows="3"></textarea></div>
+          <div class="form-group"><label>GitHub URL</label><input id="projGithub" type="url"></div>
+          <div class="form-group"><label>Image URL</label><input id="projImg" type="url"></div>
+          <div class="form-group"><label>Tech Stack (pisahkan koma)</label><input id="projStack" type="text" placeholder="React, Node.js, MySQL"></div>
+          <div class="form-group">
+            <label>Sort Order</label><input id="projOrder" type="number" value="0">
+          </div>
+          <div class="form-group" style="display:flex;align-items:center;gap:10px;margin-top:24px">
+            <input type="checkbox" id="projFeatured" style="width:16px;height:16px">
+            <label for="projFeatured">Featured project</label>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary btn-sm" id="saveProject">Simpan</button>
+          <button class="btn btn-outline btn-sm" id="cancelProject">Batal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div id="tab-experience" class="tab-content">
+      <div class="tab-toolbar">
+        <button class="btn btn-primary btn-sm" id="addExp">+ Tambah Experience</button>
+      </div>
+      <div id="expList"></div>
+      <div id="expForm" class="section-card" style="display:none">
+        <h3 class="card-title" id="expFormTitle">Tambah Experience</h3>
+        <input type="hidden" id="expId">
+        <div class="form-grid">
+          <div class="form-group"><label>Perusahaan / Organisasi</label><input id="expCompany" type="text"></div>
+          <div class="form-group"><label>Role / Jabatan</label><input id="expRole" type="text"></div>
+          <div class="form-group full"><label>Deskripsi</label><textarea id="expDesc" rows="3"></textarea></div>
+          <div class="form-group"><label>Mulai</label><input id="expStart" type="text" placeholder="November 2024"></div>
+          <div class="form-group"><label>Selesai</label><input id="expEnd" type="text" placeholder="Februari 2025 / Sekarang"></div>
+          <div class="form-group"><label>Tech Stack (pisahkan koma)</label><input id="expStack" type="text"></div>
+          <div class="form-group">
+            <input type="checkbox" id="expCurrent" style="width:16px;height:16px;margin-right:8px">
+            <label for="expCurrent">Masih berjalan</label>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary btn-sm" id="saveExp">Simpan</button>
+          <button class="btn btn-outline btn-sm" id="cancelExp">Batal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SKILLS -->
+    <div id="tab-skills" class="tab-content">
+      <div class="tab-toolbar">
+        <button class="btn btn-primary btn-sm" id="addSkill">+ Tambah Skill</button>
+      </div>
+      <div id="skillsList"></div>
+      <div id="skillForm" class="section-card" style="display:none">
+        <h3 class="card-title">Tambah / Edit Skill</h3>
+        <input type="hidden" id="skillId">
+        <div class="form-grid">
+          <div class="form-group"><label>Kategori</label><input id="skillCat" type="text" placeholder="Frontend, Backend, Tools..."></div>
+          <div class="form-group"><label>Nama Skill</label><input id="skillName" type="text"></div>
+          <div class="form-group"><label>Level (0–100)</label><input id="skillLevel" type="number" min="0" max="100" value="80"></div>
+          <div class="form-group"><label>Sort Order</label><input id="skillOrder" type="number" value="0"></div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary btn-sm" id="saveSkill">Simpan</button>
+          <button class="btn btn-outline btn-sm" id="cancelSkill">Batal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATES -->
+    <div id="tab-certificates" class="tab-content">
+      <div class="tab-toolbar">
+        <button class="btn btn-primary btn-sm" id="addCert">+ Tambah Sertifikat</button>
+      </div>
+      <div id="certsList"></div>
+      <div id="certForm" class="section-card" style="display:none">
+        <h3 class="card-title">Tambah / Edit Sertifikat</h3>
+        <input type="hidden" id="certId">
+        <div class="form-grid">
+          <div class="form-group"><label>Nama Sertifikat</label><input id="certTitle" type="text"></div>
+          <div class="form-group"><label>Issuer / Pemberi</label><input id="certIssuer" type="text"></div>
+          <div class="form-group"><label>Tanggal</label><input id="certDate" type="text" placeholder="Jan 2025"></div>
+          <div class="form-group"><label>Credential URL</label><input id="certUrl" type="url"></div>
+          <div class="form-group"><label>Image URL</label><input id="certImg" type="url"></div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary btn-sm" id="saveCert">Simpan</button>
+          <button class="btn btn-outline btn-sm" id="cancelCert">Batal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div id="tab-messages" class="tab-content">
+      <div id="messagesList"></div>
+    </div>
+
+  </main>
+</div>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>
