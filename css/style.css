@@ -514,7 +514,7 @@ footer {
   .nav-links.open {
     display: flex; flex-direction: column;
     position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0;
-    background: rgba(8,13,26,0.98); padding: 32px 24px;
+    background: #080d1a; padding: 32px 24px;
     gap: 8px; z-index: 99;
   }
   .nav-links.open a {
@@ -528,7 +528,7 @@ footer {
 
 @media (max-width: 768px) {
   section { padding: 80px 0; }
-  .container { padding: 0 20px; }
+  .container { padding: 0 24px; }
   .hero-content { padding: 60px 0 40px; }
   .hero-bio { font-size: 0.95rem; }
   .hero-stats { flex-wrap: wrap; gap: 24px; }
@@ -552,7 +552,7 @@ footer {
 @media (max-width: 640px) {
   :root { --nav-h: 60px; }
   section { padding: 60px 0; }
-  .container { padding: 0 16px; }
+  .container { padding: 0 20px; }
   .hero-content { padding: 40px 0 30px; }
   .hero-badge { font-size: 0.75rem; padding: 5px 14px; margin-bottom: 20px; }
   .hero-name { font-size: 2rem; margin-bottom: 12px; }
@@ -620,7 +620,7 @@ footer {
 }
 
 @media (max-width: 380px) {
-  .container { padding: 0 12px; }
+  .container { padding: 0 16px; }
   .hero-name { font-size: 1.7rem; }
   .hero-title-wrap { font-size: 1rem; }
   .hero-bio { font-size: 0.85rem; }
